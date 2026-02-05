@@ -1,7 +1,7 @@
 public interface ISaveMigration
 {
-    string FromVersion { get; }
-    string ToVersion { get; }
+    int FromVersion { get; }
+    int ToVersion { get; }
 
-
+    IPersistentData Migrate(IPersistentData oldSave);
 }
