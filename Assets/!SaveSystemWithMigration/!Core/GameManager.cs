@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private int _currentSaveVersion;
     [SerializeField] private Logger _logger;
 
 
@@ -21,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     private void CreateDependecies()
     {
-        SaveService = new SaveService();
+        SaveService = new SaveService(_currentSaveVersion);
     }
 
     private void InitDependecies()

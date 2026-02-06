@@ -1,16 +1,21 @@
-using UnityEngine;
-
-public class SaveMigration_1_2 : MonoBehaviour
+namespace TToTT.SaveSystem.Migration
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class SaveMigration_1_2 : ISaveMigration
     {
-        
-    }
+        public int FromVersion => 1;
+        public int ToVersion => 2;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public IPersistentData Migrate(IPersistentData oldSave)
+        {
+            var exp = oldSave.PlayerData.Expirience;
+
+            if (exp > 0)
+            {
+                oldSave.PlayerData.Level = (int)(oldSave.PlayerData.Expirience / 100);
+            }
+
+            oldSave.Version = ToVersion;
+            return oldSave;
+        }
     }
 }
