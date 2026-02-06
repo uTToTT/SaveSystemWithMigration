@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using TToTT.SaveSystem;
 using UnityEngine;
 
 public sealed class DataLocalProvider : IDataProvider
@@ -58,7 +59,7 @@ public sealed class DataLocalProvider : IDataProvider
             var json = JsonConvert.SerializeObject(_persistentData.PlayerData, Formatting.Indented, jsonSettings);
             File.WriteAllText(path, json);
 
-            Debug.Log($"Saved [{path}]");
+            GameManager.Instance.Logger.Log($"Saved [{path}]");
         }
         catch (Exception ex)
         {

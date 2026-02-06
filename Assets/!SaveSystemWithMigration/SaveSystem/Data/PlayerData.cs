@@ -1,16 +1,75 @@
-using System;
-
-[Serializable]
-public class PlayerData 
+namespace TToTT.SaveSystem
 {
-    public string Name;
-    public float Expirience;
-    public int Level;
-    public int Money;
-    public int Gems;
-
-    public PlayerData()
+    [System.Serializable]
+    public class PlayerData
     {
-        Name = "User";
+        private string _name;
+        private float _expirience;
+        private int _level;
+        private int _money;
+        private int _gems;
+
+        public PlayerData()
+        {
+            Name = "User";
+            Expirience = 0;
+            Level = 1;
+            Money = 100;
+            Gems = 5;
+        }
+
+        public string Name
+        {
+            get => Name;
+            set => Name = value;
+        }
+
+        public float Expirience
+        {
+            get => _expirience;
+            set
+            {
+                if (value < 0)
+                    throw new System.ArgumentOutOfRangeException(nameof(value));
+
+                _expirience = value;
+            }
+        }
+
+        public int Level
+        {
+            get => _level;
+            set
+            {
+                if (value < 0)
+                    throw new System.ArgumentOutOfRangeException(nameof(value));
+
+                _level = value;
+            }
+        }
+
+        public int Money
+        {
+            get => _money;
+            set
+            {
+                if (value < 0)
+                    throw new System.ArgumentOutOfRangeException(nameof(value));
+
+                _money = value;
+            }
+        }
+
+        public int Gems
+        {
+            get => _gems;
+            set
+            {
+                if (value < 0)
+                    throw new System.ArgumentOutOfRangeException(nameof(value));
+
+                _gems = value;
+            }
+        }
     }
 }

@@ -1,12 +1,29 @@
-public sealed class SaveService
+namespace TToTT.SaveSystem
 {
-    private IPersistentData _persistentData;
-    private IDataProvider _provider;
-
-
-
-    public SaveService(IDataProvider dataProvider)
+    public sealed class SaveService
     {
-        _provider = dataProvider;
+        private IPersistentData _persistentData;
+        private IDataProvider _provider;
+
+        public SaveService()
+        {
+            InitData();
+        }
+
+        public void Save() => _provider.Save();
+        public void Delete() => _provider.Delete();
+        public void Load() => LoadOrInit();
+
+        private void InitData()
+        {
+            _persistentData = new PersistentData();
+            _provider = new DataLocalProvider(_persistentData);
+        }
+
+        private void LoadOrInit()
+        {
+            if (_provider.TryLoad() == false)
+                _persistentData.PlayerData = new PlayerData();
+        }
     }
 }

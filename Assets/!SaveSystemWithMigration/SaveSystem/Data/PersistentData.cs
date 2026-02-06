@@ -1,3 +1,5 @@
+using TToTT.SaveSystem;
+
 [System.Serializable]
 public class PersistentData : IPersistentData 
 {
