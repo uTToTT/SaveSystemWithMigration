@@ -32,42 +32,39 @@ namespace TToTT.SaveSystem
 
         public bool TryLoad()
         {
+            var primaryPath = GetSavePath();
+            var backupPath = primaryPath + SAVE_BACKUP_EXTENSION;
+            var tempPath = primaryPath + SAVE_TEMP_EXTENSION;
+
             try
             {
-                if (IsAlreadyExists() == false)
-                    return false;
+                if (HasSave(tempPath))
+                    File.Delete(tempPath);
+            }
+            catch { }
 
-                var path = GetSavePath();
-                var rawData = File.ReadAllText(path);
-                var data = JsonConvert.DeserializeObject<PersistentData>(rawData);
-
-                if (data == null)
+            try
+            {
+                if (HasSave(primaryPath) &&
+                    Load(primaryPath))
                 {
-                    var backupPath = path + SAVE_BACKUP_EXTENSION;
-
-                    if (File.Exists(backupPath))
-                    {
-                        rawData = File.ReadAllText(backupPath);
-                        data = JsonConvert.DeserializeObject<PersistentData>(rawData);
-
-                        if (data == null)
-                        {
-                            return false;
-                        }
-                    }
+                    _logger.Log($"Loaded [{primaryPath}]");
                 }
-
-                _runtimePersistentData.Version = data.Version;
-                _runtimePersistentData.PlayerData = data.PlayerData;
-
-                _logger.Log($"Loaded [{path}]");
+                else if (
+                    HasSave(backupPath) &&
+                    Load(backupPath))
+                {
+                    _logger.Log($"Loaded [{backupPath}]");
+                    File.Copy(backupPath, primaryPath, true);
+                }
+                else return false;
 
                 return true;
             }
             catch (Exception ex)
             {
                 WriteErrorLog(ex);
-                throw;
+                return false;
             }
         }
 
@@ -111,10 +108,14 @@ namespace TToTT.SaveSystem
         {
             try
             {
-                var path = GetSavePath();
-                File.Delete(path);
+                var primaryPath = GetSavePath();
+                var backupPath = primaryPath + SAVE_BACKUP_EXTENSION;
 
-                _logger.Log($"Deleted [{path}]");
+                File.Delete(primaryPath);
+                File.Delete(backupPath);
+
+                _logger.Log($"Deleted [{primaryPath}]");
+                _logger.Log($"Deleted [{backupPath}]");
             }
             catch (Exception ex)
             {
@@ -126,7 +127,22 @@ namespace TToTT.SaveSystem
 
         #endregion
 
-        private bool IsAlreadyExists() => File.Exists(GetSavePath());
+        private bool HasSave(string path) => File.Exists(path);
+
+        private bool Load(string path)
+        {
+            var rawData = File.ReadAllText(path);
+            var data = JsonConvert.DeserializeObject<PersistentData>(rawData);
+
+            if (data == null ||
+                data.PlayerData == null)
+                return false;
+
+            _runtimePersistentData.Version = data.Version;
+            _runtimePersistentData.PlayerData = data.PlayerData;
+
+            return true;
+        }
 
         private string Serialize(IPersistentData data)
         {
@@ -141,8 +157,15 @@ namespace TToTT.SaveSystem
 
         private void WriteErrorLog(Exception ex)
         {
-            _logger.Log(ex.ToString());
-            File.AppendAllText(GetErrorPath(), $"[{DateTime.Now}] {ex}\n\n");
+            try
+            {
+                _logger.Log(ex.ToString());
+
+                var path = GetErrorPath();
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                File.AppendAllText(path, $"[{DateTime.Now}] {ex}\n\n");
+            }
+            catch { }
         }
     }
 }
