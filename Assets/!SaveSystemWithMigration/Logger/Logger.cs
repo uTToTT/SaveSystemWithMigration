@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class Logger : MonoBehaviour
+public class Logger : MonoBehaviour, ILogger
 {
     [SerializeField] private TMP_Text _text;
 
@@ -9,9 +9,9 @@ public class Logger : MonoBehaviour
     {
         Clear();
 
-        Log("* ================================= *");
-        Log("* ****************** SAVE * SYSTEM ****************** *");
-        Log("* ================================= *");
+        Log("* ================================== *");
+        Log("* *************** SAVE * SYSTEM *************** *");
+        Log("* ================================== *");
     }
 
     public void Log(string text) => _text.text += $"{text}\n";

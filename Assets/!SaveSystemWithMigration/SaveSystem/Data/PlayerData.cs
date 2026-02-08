@@ -20,8 +20,8 @@ namespace TToTT.SaveSystem
 
         public string Name
         {
-            get => Name;
-            set => Name = value;
+            get => _name;
+            set => _name = value;
         }
 
         public float Expirience

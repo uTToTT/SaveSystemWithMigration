@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _currentSaveVersion;
     [SerializeField] private Logger _logger;
 
+    private IPersistentData _runtimePersistentData;
+    private IDataProvider _dataProvider;
 
     public static GameManager Instance { get; private set; }
 
@@ -16,17 +18,24 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        CreateDependecies();
+        InitSaveSystem();
         InitDependecies();
-    }
-
-    private void CreateDependecies()
-    {
-        SaveService = new SaveService(_currentSaveVersion);
     }
 
     private void InitDependecies()
     {
         _logger.Init();
+    }
+
+    private void InitSaveSystem()
+    {
+        _runtimePersistentData = new PersistentData();
+        _dataProvider = new DataLocalProvider(_runtimePersistentData);
+
+        SaveService = new SaveService(
+           _currentSaveVersion,
+           Logger,
+           _runtimePersistentData,
+           _dataProvider);
     }
 }
