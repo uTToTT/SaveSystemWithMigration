@@ -1,9 +1,14 @@
+using System;
 using TToTT.SaveSystem.Migration;
 
 namespace TToTT.SaveSystem
 {
     public sealed class SaveService
     {
+        public event Action OnSaved;
+        public event Action OnDeleted;
+        public event Action OnLoaded;
+
         private readonly int _currentSaveVersion;
 
         private IPersistentData _runtimePersistentData;
@@ -11,6 +16,8 @@ namespace TToTT.SaveSystem
         private ILogger _logger;
 
         private SaveMigrationRegistry _registry;
+
+        public IPersistentData Data => _runtimePersistentData;
 
         public SaveService(
             int currentSaveVersion,
@@ -26,9 +33,23 @@ namespace TToTT.SaveSystem
 
         #region API
 
-        public void Save() => _provider.Save();
-        public void Delete() => _provider.Delete();
-        public void Load() => LoadOrInit();
+        public void Save()
+        {
+            _provider.Save();
+            OnSaved?.Invoke();
+        }
+
+        public void Delete()
+        {
+            _provider.Delete();
+            OnDeleted?.Invoke();
+        }
+
+        public void Load()
+        {
+            LoadOrInit();
+            OnLoaded?.Invoke();
+        }
 
         #endregion
 

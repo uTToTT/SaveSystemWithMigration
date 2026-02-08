@@ -1,3 +1,4 @@
+using TToTT.GameEvents;
 using TToTT.SaveSystem;
 using UnityEngine;
 
@@ -5,7 +6,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private int _currentSaveVersion;
     [SerializeField] private Logger _mainLogger;
-    [SerializeField] private Logger _statsLogger;
+    [SerializeField] private EventManager _eventManager;
+    [SerializeField] private DataDisplay _dataDisplay;
 
     private IPersistentData _runtimePersistentData;
     private IDataProvider _dataProvider;
@@ -13,7 +15,6 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public Logger MainLogger => _mainLogger;
-    public Logger StatsLogger => _statsLogger;
     public SaveService SaveService { get; private set; }
 
     private void Awake()
@@ -22,11 +23,14 @@ public class GameManager : MonoBehaviour
 
         InitDependecies();
         InitSaveSystem();
+
+        SaveService.Load();
     }
 
     private void InitDependecies()
     {
         _mainLogger.Init();
+        _dataDisplay.Init();
     }
 
     private void InitSaveSystem()
@@ -39,5 +43,9 @@ public class GameManager : MonoBehaviour
            MainLogger,
            _runtimePersistentData,
            _dataProvider);
+
+        SaveService.OnSaved += _eventManager.GameDataSaved;
+        SaveService.OnDeleted += _eventManager.GameDataDeleted;
+        SaveService.OnLoaded += _eventManager.GameDataLoaded;
     }
 }
