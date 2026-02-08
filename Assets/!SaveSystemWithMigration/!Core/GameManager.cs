@@ -18,8 +18,8 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        InitSaveSystem();
         InitDependecies();
+        InitSaveSystem();
     }
 
     private void InitDependecies()
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     private void InitSaveSystem()
     {
         _runtimePersistentData = new PersistentData();
-        _dataProvider = new DataLocalProvider(_runtimePersistentData);
+        _dataProvider = new DataLocalProvider(Logger, _runtimePersistentData);
 
         SaveService = new SaveService(
            _currentSaveVersion,

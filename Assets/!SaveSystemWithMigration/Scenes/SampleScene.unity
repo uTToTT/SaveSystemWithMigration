@@ -651,6 +651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a37bb67d5b3c7a44a08559904da949c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  _currentSaveVersion: 4
   _logger: {fileID: 569366078}
 --- !u!1 &527225532
 GameObject:
