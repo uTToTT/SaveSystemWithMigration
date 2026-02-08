@@ -24,9 +24,13 @@ namespace TToTT.SaveSystem
             InitData(persistentData, dataProvider);
         }
 
+        #region API
+
         public void Save() => _provider.Save();
         public void Delete() => _provider.Delete();
         public void Load() => LoadOrInit();
+
+        #endregion
 
         private void InitData(IPersistentData persistent, IDataProvider provider)
         {
@@ -57,6 +61,8 @@ namespace TToTT.SaveSystem
             }
 
             MigrateIfNeeded(_runtimePersistentData);
+
+
         }
 
         private IPersistentData MigrateIfNeeded(IPersistentData save)

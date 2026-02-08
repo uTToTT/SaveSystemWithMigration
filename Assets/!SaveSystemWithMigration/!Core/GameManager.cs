@@ -4,14 +4,16 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private int _currentSaveVersion;
-    [SerializeField] private Logger _logger;
+    [SerializeField] private Logger _mainLogger;
+    [SerializeField] private Logger _statsLogger;
 
     private IPersistentData _runtimePersistentData;
     private IDataProvider _dataProvider;
 
     public static GameManager Instance { get; private set; }
 
-    public Logger Logger => _logger;
+    public Logger MainLogger => _mainLogger;
+    public Logger StatsLogger => _statsLogger;
     public SaveService SaveService { get; private set; }
 
     private void Awake()
@@ -24,17 +26,17 @@ public class GameManager : MonoBehaviour
 
     private void InitDependecies()
     {
-        _logger.Init();
+        _mainLogger.Init();
     }
 
     private void InitSaveSystem()
     {
         _runtimePersistentData = new PersistentData();
-        _dataProvider = new DataLocalProvider(Logger, _runtimePersistentData);
+        _dataProvider = new DataLocalProvider(MainLogger, _runtimePersistentData);
 
         SaveService = new SaveService(
            _currentSaveVersion,
-           Logger,
+           MainLogger,
            _runtimePersistentData,
            _dataProvider);
     }
