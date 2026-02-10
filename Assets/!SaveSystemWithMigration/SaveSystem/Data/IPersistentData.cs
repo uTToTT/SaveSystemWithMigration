@@ -1,8 +1,7 @@
 using TToTT.SaveSystem;
 
-public interface IPersistentData 
+public interface IPersistentData
 {
     int Version { get; set; }
     PlayerData PlayerData { get; set; }
-
 }

@@ -14,7 +14,7 @@ public class Logger : MonoBehaviour, ILogger
         Log("* ================================== *");
     }
 
-    public void Log(string text) => _text.text += $"{text}\n";
+    public void Log(string text) => _text.text += $"- {text}\n";
 
     public void Clear() => _text.text = string.Empty;
 }

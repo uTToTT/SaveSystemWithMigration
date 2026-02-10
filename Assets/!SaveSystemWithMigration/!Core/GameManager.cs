@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Logger _mainLogger;
     [SerializeField] private EventManager _eventManager;
     [SerializeField] private DataDisplay _dataDisplay;
+    [SerializeField] private GodConsole _godConsole;
 
     private IPersistentData _runtimePersistentData;
     private IDataProvider _dataProvider;
@@ -25,12 +26,14 @@ public class GameManager : MonoBehaviour
         InitSaveSystem();
 
         SaveService.Load();
+        SaveService.Save();
     }
 
     private void InitDependecies()
     {
         _mainLogger.Init();
         _dataDisplay.Init();
+        _godConsole.Init();
     }
 
     private void InitSaveSystem()

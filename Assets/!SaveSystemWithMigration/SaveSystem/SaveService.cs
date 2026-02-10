@@ -79,11 +79,11 @@ namespace TToTT.SaveSystem
             {
                 _runtimePersistentData.PlayerData = new PlayerData();
                 _runtimePersistentData.Version = _currentSaveVersion;
+
+                _logger.Log("Save not found. Created new file.");
             }
 
             MigrateIfNeeded(_runtimePersistentData);
-
-
         }
 
         private IPersistentData MigrateIfNeeded(IPersistentData save)
