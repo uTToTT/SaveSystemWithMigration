@@ -5,16 +5,12 @@ public class Logger : MonoBehaviour, ILogger
 {
     [SerializeField] private TMP_Text _text;
 
-    public void Init()
-    {
-        Clear();
+    #region Init
 
-        Log("* ================================== *");
-        Log("* *************** SAVE * SYSTEM *************** *");
-        Log("* ================================== *");
-    }
+    public void Init() => Clear();
+
+    #endregion
 
     public void Log(string text) => _text.text += $"- {text}\n";
-
     public void Clear() => _text.text = string.Empty;
 }

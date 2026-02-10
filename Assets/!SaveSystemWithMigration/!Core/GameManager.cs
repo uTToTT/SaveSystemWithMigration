@@ -16,28 +16,26 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public Logger MainLogger => _mainLogger;
+    public EventManager EventManager => _eventManager;
     public SaveService SaveService { get; private set; }
 
     private void Awake()
     {
         Instance = this;
 
-        InitDependecies();
-        InitSaveSystem();
-
-        SaveService.Load();
-        SaveService.Save();
-    }
-
-    private void InitDependecies()
-    {
         _mainLogger.Init();
+        MainLogger.Log("Start system.");
+
         _dataDisplay.Init();
+     
+        InitSaveSystem();
         _godConsole.Init();
     }
 
     private void InitSaveSystem()
     {
+        MainLogger.Log("Initialize save service...");
+
         _runtimePersistentData = new PersistentData();
         _dataProvider = new DataLocalProvider(MainLogger, _runtimePersistentData);
 
@@ -50,5 +48,9 @@ public class GameManager : MonoBehaviour
         SaveService.OnSaved += _eventManager.GameDataSaved;
         SaveService.OnDeleted += _eventManager.GameDataDeleted;
         SaveService.OnLoaded += _eventManager.GameDataLoaded;
+        MainLogger.Log("Save service initialized.");
+
+        SaveService.Load();
+        SaveService.Save();
     }
 }

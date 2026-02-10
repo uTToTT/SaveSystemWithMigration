@@ -8,12 +8,24 @@ namespace TToTT.GameEvents
         [SerializeField] private GameEvent _gameDataSaved;
         [SerializeField] private GameEvent _gameDataDeleted;
         [SerializeField] private GameEvent _gameDataLoaded;
+        [SerializeField] private GameEvent _gameDataUpdated;
 
         #region Game data
 
         public void GameDataSaved() => _gameDataSaved.Raise();
-        public void GameDataDeleted() => _gameDataDeleted.Raise();
-        public void GameDataLoaded() => _gameDataLoaded.Raise();
+        public void GameDataDeleted()
+        {
+            _gameDataDeleted.Raise();
+            GameDataUpdated();
+        }
+
+        public void GameDataLoaded()
+        {
+            _gameDataLoaded.Raise();
+            GameDataUpdated();
+        }
+
+        public void GameDataUpdated() => _gameDataUpdated.Raise();
 
         #endregion
     }

@@ -8,12 +8,12 @@ using UnityEngine.UI;
 public class DataDisplay : MonoBehaviour
 {
     [Header("Actions")]
-    [SerializeField] private GameEvent _gameDataLoaded;
+    [SerializeField] private GameEvent _gameDataUpdated;
 
     [Header("UI")]
     [SerializeField] private TMP_Text _dataText;
 
-    public void Init() => _gameDataLoaded.Register(ShowData);
+    public void Init() => _gameDataUpdated.Register(ShowData);
 
     public void Display(string message) => _dataText.text = message;
     public void Clear() => _dataText.text = string.Empty;
