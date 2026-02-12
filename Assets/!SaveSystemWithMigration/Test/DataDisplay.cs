@@ -13,25 +13,49 @@ public class DataDisplay : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text _dataText;
 
-    public void Init() => _gameDataUpdated.Register(ShowData);
+    public void Init()
+    {
+        ShowData();
+        _gameDataUpdated.Register(ShowData);
+    }
 
     public void Display(string message) => _dataText.text = message;
     public void Clear() => _dataText.text = string.Empty;
 
     private void ShowData()
     {
+        const string NULL = "NULL";
+
+        string version = NULL;
+        string name = NULL;
+        string level = NULL;
+        string expirience = NULL;
+        string money = NULL;
+        string gems = NULL;
+
         StringBuilder sb = new StringBuilder();
 
         var data = GameManager.Instance.SaveService.Data;
-        var playerData = data.PlayerData;
 
-        sb.AppendLine($"Version [{data.Version}]");
+        if (data != null && data.PlayerData != null)
+        {
+            var playerData = data.PlayerData;
+
+            version = data.Version.ToString();
+            name = playerData.Name;
+            level = playerData.Level.ToString();
+            expirience = playerData.Expirience.ToString();
+            money = playerData.Money.ToString();
+            gems = playerData.Gems.ToString();
+        }
+
+        sb.AppendLine($"Version [{version}]");
         sb.AppendLine();
-        sb.AppendLine($"Name: [{playerData.Name}]");
-        sb.AppendLine($"Level: [{playerData.Level}]");
-        sb.AppendLine($"Expirience: [{playerData.Expirience}]");
-        sb.AppendLine($"Money: [{playerData.Money}]");
-        sb.AppendLine($"Gems: [{playerData.Gems}]");
+        sb.AppendLine($"Name: [{name}]");
+        sb.AppendLine($"Level: [{level}]");
+        sb.AppendLine($"Expirience: [{expirience}]");
+        sb.AppendLine($"Money: [{money}]");
+        sb.AppendLine($"Gems: [{gems}]");
 
         Display(sb.ToString());
     }

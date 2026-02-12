@@ -17,6 +17,8 @@ public class GodConsole : MonoBehaviour
     {
         var data = GameManager.Instance.SaveService.Data.PlayerData;
 
+        if (data == null) return;
+
         switch (itemType)
         {
             case ItemType.None:

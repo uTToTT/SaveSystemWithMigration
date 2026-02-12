@@ -35,18 +35,22 @@ namespace TToTT.SaveSystem
 
         public void Save()
         {
+            _logger.Log("Saving file...");
             _provider.Save();
             OnSaved?.Invoke();
         }
 
         public void Delete()
         {
+            _logger.Log("Deleting file...");
             _provider.Delete();
+            CreateNewData();
             OnDeleted?.Invoke();
         }
 
         public void Load()
         {
+            _logger.Log("Loading file...");
             LoadOrInit();
             OnLoaded?.Invoke();
         }
@@ -77,13 +81,19 @@ namespace TToTT.SaveSystem
         {
             if (_provider.TryLoad() == false)
             {
-                _runtimePersistentData.PlayerData = new PlayerData();
-                _runtimePersistentData.Version = _currentSaveVersion;
-
-                _logger.Log("Save not found. Created new file.");
+                _logger.Log("Save not found.");
+                CreateNewData();
             }
 
             MigrateIfNeeded(_runtimePersistentData);
+        }
+
+        private void CreateNewData()
+        {
+            _logger.Log("Initializing new data...");
+            _runtimePersistentData.PlayerData = new PlayerData();
+            _runtimePersistentData.Version = _currentSaveVersion;
+            _logger.Log("New data initialized.");
         }
 
         private IPersistentData MigrateIfNeeded(IPersistentData save)

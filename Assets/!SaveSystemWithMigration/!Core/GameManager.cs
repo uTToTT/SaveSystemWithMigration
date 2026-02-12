@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private EventManager _eventManager;
     [SerializeField] private DataDisplay _dataDisplay;
     [SerializeField] private GodConsole _godConsole;
+    [SerializeField] private SaveDebugger _saveDebugger;
+    [SerializeField] private SceneLoader _sceneLoader;
 
     private IPersistentData _runtimePersistentData;
     private IDataProvider _dataProvider;
@@ -21,15 +23,19 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        // TODO: export init system to Bootstrap.cs
+
         Instance = this;
 
         _mainLogger.Init();
         MainLogger.Log("Start system.");
 
-        _dataDisplay.Init();
-     
         InitSaveSystem();
+
+        _dataDisplay.Init();
         _godConsole.Init();
+        _saveDebugger.Init();
+        _sceneLoader.Init();
     }
 
     private void InitSaveSystem()
@@ -49,8 +55,5 @@ public class GameManager : MonoBehaviour
         SaveService.OnDeleted += _eventManager.GameDataDeleted;
         SaveService.OnLoaded += _eventManager.GameDataLoaded;
         MainLogger.Log("Save service initialized.");
-
-        SaveService.Load();
-        SaveService.Save();
     }
 }
