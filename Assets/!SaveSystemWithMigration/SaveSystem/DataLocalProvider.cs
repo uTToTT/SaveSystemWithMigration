@@ -29,8 +29,10 @@ namespace TToTT.SaveSystem
         }
 
         public static string SavePath => Application.persistentDataPath;
-        public static string GetErrorPath() => Path.Combine(SavePath, $"{ERROR_FILE_PREFIX}{ERROR_FILE_EXTENSION}");
-        public static string GetSavePath() => Path.Combine(SavePath, $"{SAVE_FILE_PREFIX}{SAVE_FILE_EXTENSION}");
+        public static string GetErrorPath() =>
+            Path.Combine(SavePath, $"{ERROR_FILE_PREFIX}{ERROR_FILE_EXTENSION}");
+        public static string GetSavePath() =>
+            Path.Combine(SavePath, $"{SAVE_FILE_PREFIX}{SAVE_FILE_EXTENSION}");
 
         #region API
 
@@ -53,22 +55,25 @@ namespace TToTT.SaveSystem
                     Load(primaryPath))
                 {
                     _logger.Log($"Loaded from [{primaryPath}]");
-                }
-                else if (
-                    HasSave(backupPath) &&
-                    Load(backupPath))
-                {
-                    _logger.Log($"Loaded from [{backupPath}]");
-                    File.Copy(backupPath, primaryPath, true);
+                    OnLoaded?.Invoke();
+                    return true;
+
                 }
                 else return false;
-
-                OnLoaded?.Invoke();
-                return true;
             }
             catch (Exception ex)
             {
                 WriteErrorLog(ex);
+
+                if (HasSave(backupPath) &&
+                    Load(backupPath))
+                {
+                    _logger.Log($"Loaded from [{backupPath}]");
+                    File.Copy(backupPath, primaryPath, true);
+                    OnLoaded?.Invoke();
+                    return true;
+                }
+
                 return false;
             }
         }
